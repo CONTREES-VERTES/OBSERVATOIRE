@@ -109,7 +109,7 @@
   }
 
   /* ── CONTENU ── */
-  .content { padding: 0.5rem 2rem 0.5rem; }
+  .content { padding: 0.5rem 2rem 5rem; }
   .page { display: none; }
   .page.active { display: block; }
 
@@ -411,6 +411,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow-y: auto;
   }
   @media (max-width: 768px) {
     .sidebar-photo { display: none; }
@@ -511,6 +512,73 @@
   .rubrique-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 0.1rem; }
   .rubrique-titre { font-family: var(--font-titre); font-size: 0.8rem; font-weight: 700; color: var(--c-bleu); margin-bottom: 0.2rem; }
   .rubrique-desc { font-size: 0.75rem; color: var(--c-gris); line-height: 1.4; }
+
+  /* ── PAGE ÉTUDE CLIENTÈLE ── */
+  .etude-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 1rem;
+    align-items: start;
+    padding-bottom: 1rem;
+  }
+  @media (max-width: 900px) { .etude-layout { grid-template-columns: 1fr; } }
+  .etude-docs-col { display: flex; flex-direction: column; gap: 0.75rem; }
+  .doc-card {
+    background: white; border-radius: var(--rayon);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08); overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.15s;
+    text-decoration: none; color: inherit; display: flex;
+    align-items: center; gap: 0.75rem; padding: 0.6rem 0.75rem;
+  }
+  .doc-card:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.13); transform: translateY(-1px); }
+  .doc-card-img { width: 70px; height: 54px; object-fit: cover; border-radius: 5px; flex-shrink: 0; background: var(--c-gris-clair); display: block; }
+  .doc-card-img-placeholder {
+    width: 70px; height: 54px; border-radius: 5px; flex-shrink: 0;
+    background: linear-gradient(135deg, var(--c-bleu-clair), var(--c-vert-clair));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; color: white;
+  }
+  .doc-card-body { flex: 1; min-width: 0; }
+  .doc-card-titre { font-family: var(--font-titre); font-size: 0.85rem; font-weight: 700; color: var(--c-texte); margin-bottom: 0.3rem; line-height: 1.3; }
+  .doc-card-dl { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--c-terra); font-size: 0.78rem; font-weight: 700; text-decoration: none; }
+  .doc-card-dl:hover { text-decoration: underline; }
+  .etude-stats-col { display: flex; flex-direction: column; gap: 0.6rem; }
+  .etude-section { background: white; border-radius: var(--rayon); padding: 0.6rem 0.9rem; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+  .etude-section-titre {
+    font-family: var(--font-titre); font-size: 0.72rem; font-weight: 700;
+    color: var(--c-gris); text-transform: uppercase; letter-spacing: 0.07em;
+    margin-bottom: 0.45rem; display: flex; align-items: center; gap: 0.5rem;
+  }
+  .etude-section-titre::before { content: ''; display: block; width: 3px; height: 12px; background: var(--c-terra); border-radius: 2px; flex-shrink: 0; }
+  .etude-section-titre.vert::before { background: var(--c-vert); }
+  .etude-section-titre.bleu::before { background: var(--c-bleu); }
+  .etude-poids-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+  .etude-poids-item { background: var(--c-creme); border-radius: 6px; padding: 0.45rem 0.7rem; border-left: 3px solid var(--c-terra); }
+  .etude-poids-val { font-family: var(--font-titre); font-size: 1.3rem; font-weight: 900; color: var(--c-terra); line-height: 1; }
+  .etude-poids-lbl { font-size: 0.7rem; color: var(--c-gris); margin-top: 0.2rem; line-height: 1.3; }
+  .etude-profil-list { display: flex; flex-direction: column; gap: 0.3rem; }
+  .etude-profil-item { display: flex; align-items: baseline; gap: 0.5rem; font-size: 0.82rem; }
+  .etude-profil-val { font-family: var(--font-titre); font-size: 1rem; font-weight: 900; color: var(--c-bleu); flex-shrink: 0; min-width: 3rem; }
+  .etude-profil-txt { color: var(--c-texte); line-height: 1.3; }
+  .etude-budget-bar-row { margin-bottom: 0.45rem; }
+  .etude-budget-bar-label { display: flex; justify-content: space-between; align-items: baseline; font-size: 0.78rem; margin-bottom: 0.2rem; color: var(--c-texte); }
+  .etude-budget-bar-label span { font-weight: 600; }
+  .etude-budget-bar-label strong { font-family: var(--font-titre); font-size: 0.85rem; }
+  .etude-budget-track { height: 8px; border-radius: 4px; background: var(--c-gris-clair); overflow: hidden; }
+  .etude-budget-fill { height: 100%; border-radius: 4px; }
+  .etude-budget-total { background: var(--c-creme); border-radius: 6px; padding: 0.45rem 0.75rem; margin-bottom: 0.6rem; display: flex; align-items: baseline; gap: 0.5rem; }
+  .etude-budget-total-val { font-family: var(--font-titre); font-size: 1.2rem; font-weight: 900; color: var(--c-vert); }
+  .etude-budget-total-lbl { font-size: 0.73rem; color: var(--c-gris); }
+  .etude-budget-delta { font-size: 0.72rem; color: var(--c-vert); font-weight: 700; background: var(--c-vert-clair); border-radius: 4px; padding: 0.12rem 0.35rem; margin-top: 0.35rem; display: inline-block; }
+  .etude-satis-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .etude-satis-item { border-radius: 6px; padding: 0.5rem 0.75rem; border: 2px solid var(--c-gris-clair); text-align: center; }
+  .etude-satis-item.featured { border-color: var(--c-vert); background: rgba(74,103,65,0.04); }
+  .etude-satis-name { font-size: 0.7rem; color: var(--c-gris); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; }
+  .etude-satis-val { font-family: var(--font-titre); font-size: 1.6rem; font-weight: 900; color: var(--c-bleu); line-height: 1; }
+  .etude-satis-item.featured .etude-satis-val { color: var(--c-vert); }
+  .etude-satis-stars { color: #F5A623; font-size: 0.8rem; margin: 0.15rem 0; letter-spacing: 0.1em; }
+  .etude-satis-sub { font-size: 0.65rem; color: var(--c-gris); line-height: 1.3; }
+  .etude-satis-item.featured .etude-satis-sub { color: var(--c-vert); font-weight: 700; }
 
   /* ── PAGE MÉTHODOLOGIE ── */
   .methodo-header {
@@ -730,10 +798,11 @@
   <button class="tab-btn" onclick="showPage('mensuelles',this)">Nuitées mensuelles</button>
   <button class="tab-btn" onclick="showPage('vacances',this)">Vacances</button>
   <button class="tab-btn" onclick="showPage('feries',this)">Jours fériés</button>
-  <button class="tab-btn" onclick="showPage('marches',this)">Marchés</button>
-  <button class="tab-btn" onclick="showPage('marches-dept',this)">Marchés FR par département</button>
-  <button class="tab-btn" onclick="showPage('marches-region',this)">Marchés FR par région</button>
+  <button class="tab-btn" onclick="showPage('marches',this)">Origine des visiteurs</button>
+  <button class="tab-btn" onclick="showPage('marches-dept',this)">Origine FR par département</button>
+  <button class="tab-btn" onclick="showPage('marches-region',this)">Origine FR par région</button>
   <button class="tab-btn" onclick="showPage('capacite',this)">Capacité d'accueil</button>
+  <button class="tab-btn" onclick="showPage('etude-clientele',this)">Étude clientèle</button>
   <button class="tab-btn" onclick="showPage('methodo',this)">Méthodologie</button>
   <button class="tab-btn" onclick="showPage('contact',this)">Contact</button>
 </nav>
@@ -748,6 +817,9 @@
 <!-- ═══════════════════ PAGE : SYNTHÈSE ═══════════════════ -->
 <div id="page-synthese" class="page">
   <div class="kpi-grid" id="kpi-synthese"></div>
+
+  <!-- Retombées économiques -->
+  <div id="synthese-retombees" style="margin-bottom:1rem"></div>
 
   <div style="margin-bottom:1rem">
     <div style="font-size:0.75rem;font-weight:700;color:var(--c-gris);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.4rem">Répartition Français / Étrangers — Nuitées</div>
@@ -917,7 +989,6 @@
   <div class="source-tag">Source : Contrées Vertes / Visitdata - Flux Vision-Orange Business</div>
 </div>
 
-
 <!-- ═══════════════════ PAGE : MARCHÉS FR PAR RÉGION ═══════════════════ -->
 <div id="page-marches-region" class="page">
   <div id="marches-region-content"></div>
@@ -940,6 +1011,11 @@
   <div class="source-tag">Source : Contrées Vertes / Visitdata - Flux Vision-Orange Business</div>
 </div>
 
+
+<!-- ═══════════════════ PAGE : ÉTUDE CLIENTÈLE ═══════════════════ -->
+<div id="page-etude-clientele" class="page">
+  <div id="etude-clientele-content"></div>
+</div>
 
 <!-- ═══════════════════ PAGE : CAPACITÉ D'ACCUEIL ═══════════════════ -->
 <div id="page-methodo" class="page">
@@ -1186,6 +1262,38 @@
   </div>
 
   <div class="modal-section">
+    <h3>Étude clientèle</h3>
+    <div class="form-grid">
+      <div class="form-group"><label>Année de référence</label><input type="number" id="ed-etude-annee"></div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--c-gris);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">Documents (encarts gauche)</div>
+      <div id="ed-etude-docs"></div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--c-gris);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">Poids Tulle Agglo</div>
+      <div id="ed-etude-poids"></div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--c-gris);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">Profil de la clientèle</div>
+      <div id="ed-etude-profil"></div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--c-gris);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">Budget &amp; dépenses</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Budget total (valeur)</label><input type="text" id="ed-etude-budget-total-val"></div>
+        <div class="form-group"><label>Budget total (libellé)</label><input type="text" id="ed-etude-budget-total-lbl"></div>
+        <div class="form-group" style="grid-column:1/-1"><label>Mention évolution (ex: + 18,9 % vs moyenne dép.)</label><input type="text" id="ed-etude-budget-delta"></div>
+      </div>
+      <div id="ed-etude-barres" style="margin-top:0.5rem"></div>
+    </div>
+    <div style="margin-top:0.75rem">
+      <div style="font-size:0.78rem;font-weight:700;color:var(--c-gris);margin-bottom:0.5rem;text-transform:uppercase;letter-spacing:0.05em">Satisfaction client</div>
+      <div id="ed-etude-satis"></div>
+    </div>
+  </div>
+
+  <div class="modal-section">
     <h3>Charte graphique</h3>
     <div class="form-grid">
       <div class="form-group"><label>Couleur principale (bleu)</label><input type="color" id="ed-c-bleu"></div>
@@ -1256,6 +1364,52 @@ const CONFIG = {
       { icon:"🎉", titre:"Jours fériés",            desc:"Impact des fériés sur la fréquentation touristique française",    page:"feries" },
       { icon:"🌍", titre:"Marchés émetteurs",       desc:"Origines françaises et étrangères, principaux bassins",           page:"marches" },
       { icon:"📋", titre:"Méthodologie",            desc:"Sources, définitions, avertissements sur les données",            page:"methodo" },
+    ],
+  },
+
+  // ── Étude clientèle ───────────────────────────────────────────
+  etudeClientele: {
+    annee: 2025,
+    // ── Documents à gauche (2 encarts) ────
+    // Pour chaque doc : titre, imageUrl (URL ou chemin), lienTelechargement
+    documents: [
+      {
+        titre: "Enquête BVA - Fréquentation Touristique en Corrèze",
+        imageUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='108'%3E%3Crect width='140' height='108' fill='%231D3557'/%3E%3Cpolygon points='0,0 80,0 95,20 80,40 0,40' fill='%23C1602E'/%3E%3Ctext x='8' y='26' font-family='Arial' font-size='9' fill='white' font-weight='700'%3EL'OBSERVATOIRE%3C/text%3E%3Ctext x='10' y='80' font-family='Arial' font-size='7' fill='%23C1602E' font-weight='700'%3EFREQUENTATION TOURISTIQUE%3C/text%3E%3Ctext x='10' y='93' font-family='Arial' font-size='9' fill='white' font-weight='700'%3EDEPT CORREZE%3C/text%3E%3C/svg%3E",
+        lien: "https://pro.tourismecorreze.com/wp-content/uploads/2026/04/DEF_CRT-NAQ-PO-Correze-01042026.pdf",
+      },
+      {
+        titre: "Bilan de la fréquentation touristique",
+        imageUrl: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='108'%3E%3Crect width='140' height='108' fill='%231D3A56'/%3E%3Crect x='55' y='8' width='77' height='60' rx='6' fill='%23334E6E'/%3E%3Ctext x='70' y='65' font-family='Arial' font-size='28' fill='%23C1602E' text-anchor='middle'%3E🏰%3C/text%3E%3Ctext x='10' y='82' font-family='Arial' font-size='7' fill='%23C1602E' font-weight='700'%3EPRÉSENTATION DÉPARTEMENTALE%3C/text%3E%3Ctext x='10' y='95' font-family='Arial' font-size='9' fill='white' font-weight='700'%3ELA FRÉQUENTATION%3C/text%3E%3Ctext x='10' y='106' font-family='Arial' font-size='9' fill='white' font-weight='700'%3EEN CORRÈZE%3C/text%3E%3C/svg%3E",
+        lien: "https://www.calameo.com/correze-tourisme/read/000066985ef4691a2a23c",
+      },
+    ],
+    // ── Poids Tulle Agglo dans le département ────
+    poids: [
+      { val: "18%", lbl: "des séjours réalisés en Corrèze" },
+      { val: "12%", lbl: "des nuitées réalisées en Corrèze" },
+    ],
+    // ── Profil de la clientèle ────
+    profil: [
+      { val: "63%",    txt: "en couple dont 59% seniors" },
+      { val: "45%",    txt: "motif principal : visite famille / amis" },
+      { val: "4 jours",txt: "durée moyenne de séjour" },
+    ],
+    // ── Budget & dépenses ────
+    budgetTotal: { val: "341 €", lbl: "budget moyen du séjour par personne en Corrèze" },
+    budgetBarres: [
+      { label: "Dépense/jour — Corrèze",          val: "59,2 €", largeurPct: 84, couleur: "var(--c-bleu)" },
+      { label: "Dépense/jour — Contrées Vertes",  val: "70,4 €", largeurPct: 100, couleur: "var(--c-vert)" },
+    ],
+    budgetDelta: "+ 18,9 % vs moyenne départementale",
+    // ── Retombées économiques ────
+    retombees: "82,4 M€",
+    retombeesNuitees: "1 170 791",
+    retombeesDepense: "70,40 €",
+    // ── Satisfaction ────
+    satisfaction: [
+      { nom: "Corrèze",        note: "8,8", sub: "note /10",                   featured: false },
+      { nom: "Contrées Vertes",note: "9,1", sub: "note /10 · +0,3 pt vs Corrèze", featured: true },
     ],
   },
 
@@ -1510,8 +1664,9 @@ function renderPage(id) {
   if (id === 'feries')        renderFeries();
   if (id === 'marches')       renderMarches();
   if (id === 'marches-dept')  renderMarchesDept();
-  if (id === 'capacite')      renderCapacite();
   if (id === 'marches-region') renderMarchesRegion();
+  if (id === 'capacite')      renderCapacite();
+  if (id === 'etude-clientele') renderEtudeClientele();
   if (id === 'contact')        {} // image statique, pas de render JS
   if (id === 'methodo')       renderMethodo();
 }
@@ -1607,8 +1762,8 @@ function renderMarchesRegion() {
   }).join('');
 
   el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem">
-      <div class="section-title" style="margin-bottom:0">Marchés français — Nuitées par région émettrice</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.6rem;margin-top:1rem">
+      <div class="card-title" style="margin-bottom:0;font-size:1rem"><span class="dot"></span> Nuitées par région émettrice</div>
       <div>${yearBtns}</div>
     </div>
     <div class="grid-2" style="gap:0.6rem">
@@ -1635,8 +1790,7 @@ function renderMarchesRegion() {
           </tfoot>
         </table>
       </div>
-    </div>
-    <div class="source-tag">Source : Contrées Vertes / Visitdata - Flux Vision-Orange Business</div>`;
+    </div>`;
 }
 
 function selectRegionYear(y) {
@@ -1700,6 +1854,150 @@ function selectRegionYear(y) {
   totals.forEach(t => { if(t.textContent.includes('Total')) t.textContent = 'Total : '+regionData.reduce((s,r)=>s+r.nuitees,0).toLocaleString('fr-FR')+' nuitées'; });
 }
 
+
+// ── PAGE ÉTUDE CLIENTÈLE ──
+function renderEtudeClientele() {
+  const C = CONFIG.etudeClientele;
+  const el = document.getElementById('etude-clientele-content');
+
+  // Construire les encarts documents (gauche)
+  const docsHTML = C.documents.map((d, i) => {
+    const imgHTML = d.imageUrl
+      ? `<img class="doc-card-img" src="${d.imageUrl}" alt="${d.titre}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const placeholderStyle = d.imageUrl ? 'display:none' : '';
+    return `
+    <div class="doc-card">
+      ${imgHTML}
+      <div class="doc-card-img-placeholder" style="${placeholderStyle}">📄</div>
+      <div class="doc-card-body">
+        <div class="doc-card-titre">${d.titre}</div>
+        ${d.lien && d.lien !== '#'
+          ? `<a class="doc-card-dl" href="${d.lien}" target="_blank">↓ Télécharger</a>`
+          : `<span class="doc-card-dl" style="opacity:0.4;cursor:default">↓ Télécharger</span>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+
+  // Poids Tulle Agglo
+  const poidsHTML = C.poids.map(p => `
+    <div class="etude-poids-item">
+      <div class="etude-poids-val">${p.val}</div>
+      <div class="etude-poids-lbl">${p.lbl}</div>
+    </div>`).join('');
+
+  // Profil
+  const profilHTML = C.profil.map(p => `
+    <div class="etude-profil-item">
+      <div class="etude-profil-val">${p.val}</div>
+      <div class="etude-profil-txt">${p.txt}</div>
+    </div>`).join('');
+
+  // Budget barres
+  const barresHTML = C.budgetBarres.map(b => `
+    <div class="etude-budget-bar-row">
+      <div class="etude-budget-bar-label">
+        <span>${b.label}</span>
+        <strong>${b.val}</strong>
+      </div>
+      <div class="etude-budget-track">
+        <div class="etude-budget-fill" style="width:${b.largeurPct}%;background:${b.couleur}"></div>
+      </div>
+    </div>`).join('');
+
+  // Satisfaction
+  const satisHTML = (C.satisfaction || []).length > 0 ? C.satisfaction.map(s => `
+    <div class="etude-satis-item${s.featured ? ' featured' : ''}">
+      <div class="etude-satis-name">${s.nom}</div>
+      <div class="etude-satis-val">${s.note}</div>
+      <div class="etude-satis-stars">★★★★★</div>
+      <div class="etude-satis-sub">${s.sub}</div>
+    </div>`).join('') : `
+    <div class="etude-satis-item">
+      <div class="etude-satis-name">Corrèze</div>
+      <div class="etude-satis-val">8,8</div>
+      <div class="etude-satis-stars">★★★★★</div>
+      <div class="etude-satis-sub">note /10</div>
+    </div>
+    <div class="etude-satis-item featured">
+      <div class="etude-satis-name">Contrées Vertes</div>
+      <div class="etude-satis-val">9,1</div>
+      <div class="etude-satis-stars">★★★★★</div>
+      <div class="etude-satis-sub">note /10 · +0,3 pt vs Corrèze</div>
+    </div>`;
+
+  el.innerHTML = `
+    <div class="section-title" style="display:flex;align-items:center;justify-content:space-between">
+      Étude clientèle
+      <span style="font-size:0.75rem;font-weight:400;color:var(--c-gris)">Données ${C.annee} — Source : Ipsos BVA / Nouvelle-Aquitaine</span>
+    </div>
+    <div class="etude-layout">
+
+      <!-- COLONNE GAUCHE : documents + retombées -->
+      <div class="etude-docs-col">
+        ${docsHTML}
+        ${C.retombees ? `<div style="background:var(--c-creme);border-radius:var(--rayon);padding:0.7rem 0.9rem;border-left:3px solid var(--c-terra);margin-top:0.25rem">
+          <div style="font-size:0.7rem;font-weight:700;color:var(--c-gris);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:0.55rem">Retombées économiques</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:0.4rem;margin-bottom:0.45rem">
+            <div style="text-align:center">
+              <div style="font-size:1.3rem">🌙</div>
+              <div style="font-family:var(--font-titre);font-size:0.78rem;font-weight:900;color:var(--c-bleu)">${C.retombeesNuitees||'1 170 791'}</div>
+              <div style="font-size:0.62rem;color:var(--c-gris)">nuitées</div>
+            </div>
+            <div style="font-size:1rem;color:var(--c-gris);font-weight:700;margin-bottom:0.5rem">×</div>
+            <div style="text-align:center">
+              <div style="font-size:1.3rem">💶</div>
+              <div style="font-family:var(--font-titre);font-size:0.78rem;font-weight:900;color:var(--c-bleu)">${C.retombeesDepense||'70,40 €'}</div>
+              <div style="font-size:0.62rem;color:var(--c-gris)">dépense/jour</div>
+            </div>
+            <div style="font-size:1rem;color:var(--c-gris);font-weight:700;margin-bottom:0.5rem">=</div>
+            <div style="text-align:center">
+              <div style="font-family:var(--font-titre);font-size:1.35rem;font-weight:900;color:var(--c-terra);line-height:1">${C.retombees}</div>
+              <div style="font-size:0.62rem;color:var(--c-terra);font-weight:700">retombées</div>
+            </div>
+          </div>
+        </div>` : ''}
+      </div>
+
+      <!-- COLONNE DROITE : stats -->
+      <div class="etude-stats-col">
+
+        <!-- Poids Tulle Agglo -->
+        <div class="etude-section">
+          <div class="etude-section-titre">Poids des Contrées Vertes dans le département</div>
+          <div class="etude-poids-grid">${poidsHTML}</div>
+        </div>
+
+        <!-- Profil + Satisfaction côte à côte -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="etude-section">
+            <div class="etude-section-titre bleu">Profil de la clientèle</div>
+            <div class="etude-profil-list">${profilHTML}</div>
+          </div>
+          <div class="etude-section">
+            <div class="etude-section-titre">Satisfaction client</div>
+            <div class="etude-satis-grid">${satisHTML}</div>
+          </div>
+        </div>
+
+        <!-- Budget & dépenses -->
+        <div class="etude-section">
+          <div class="etude-section-titre vert">Budget &amp; dépenses</div>
+          <div class="etude-budget-total">
+            <span class="etude-budget-total-val">${C.budgetTotal.val}</span>
+            <span class="etude-budget-total-lbl">${C.budgetTotal.lbl}</span>
+          </div>
+          ${barresHTML}
+          <div class="etude-budget-delta">${C.budgetDelta}</div>
+        </div>
+
+      </div>
+    </div>
+    <div class="source-tag" style="margin-top:0.5rem">Source : Ipsos BVA / Nouvelle-Aquitaine ${C.annee} — Contrées Vertes</div>
+  `;
+}
+
 function renderMethodo() {
   const M = CONFIG.methodo;
   const el = document.getElementById('methodo-content');
@@ -1725,13 +2023,15 @@ function renderMethodo() {
 // ── SYNTHÈSE ──
 function renderSynthese() {
   // KPI cards
+  const EC = CONFIG.etudeClientele;
   const kpis = [
-    { val: DATA.nuitees.total,      label:"Nuitées totales",    sub: DATA.nuitees.evo + " vs " + (DATA.annee-1), type:"vert" },
-    { val: DATA.nuitees.moy,        label:"Nuitées / jour",     sub: "Moyenne " + DATA.annee,                    type:""     },
-    { val: DATA.nuitees.max,        label:"Nuitées max / jour", sub: DATA.nuitees.maxDate,                       type:"terra"},
-    { val: DATA.excursions.total,   label:"Excursions totales", sub: DATA.excursions.evo + " vs " + (DATA.annee-1), type:"" },
-    { val: DATA.excursions.moy,     label:"Excursions / jour",  sub: "Moyenne " + DATA.annee,                    type:"vert" },
-    { val: DATA.excursions.max,     label:"Excursions max",     sub: DATA.excursions.maxDate,                    type:"terra"},
+    { val: DATA.nuitees.total,      label:"Nuitées totales",         sub: DATA.nuitees.evo + " vs " + (DATA.annee-1), type:"vert" },
+    { val: EC.retombees||'—',       label:"Retombées économiques",   sub: (EC.retombeesNuitees||'') + " × " + (EC.retombeesDepense||''), type:"terra" },
+    { val: DATA.nuitees.moy,        label:"Nuitées / jour",          sub: "Moyenne " + DATA.annee,                    type:""     },
+    { val: DATA.nuitees.max,        label:"Nuitées max / jour",      sub: DATA.nuitees.maxDate,                       type:"terra"},
+    { val: DATA.excursions.total,   label:"Excursions totales",      sub: DATA.excursions.evo + " vs " + (DATA.annee-1), type:"" },
+    { val: DATA.excursions.moy,     label:"Excursions / jour",       sub: "Moyenne " + DATA.annee,                    type:"vert" },
+    { val: DATA.excursions.max,     label:"Excursions max",          sub: DATA.excursions.maxDate,                    type:"terra"},
   ];
   const grid = document.getElementById('kpi-synthese');
   grid.innerHTML = kpis.map(k => {
@@ -1743,6 +2043,8 @@ function renderSynthese() {
       <div class="kpi-evo ${pos?'pos':neg?'neg':''}">${k.sub}</div>
     </div>`;
   }).join('');
+
+  // Retombées économiques — intégrées dans les KPI cards ci-dessus
 
   // Barres FR/ETR
   function buildBar(elId, fr, etr, cFr, cEtr) {
@@ -2088,6 +2390,43 @@ function openModal() {
 
   // ── Couleurs ──
   document.getElementById('ed-c-bleu').value  = rgbToHex(getComputedStyle(document.documentElement).getPropertyValue('--c-bleu').trim());
+
+  // ── Étude clientèle ──
+  const EC = CONFIG.etudeClientele;
+  document.getElementById('ed-etude-annee').value = EC.annee || '';
+  document.getElementById('ed-etude-budget-total-val').value = EC.budgetTotal?.val || '';
+  document.getElementById('ed-etude-budget-total-lbl').value = EC.budgetTotal?.lbl || '';
+  document.getElementById('ed-etude-budget-delta').value = EC.budgetDelta || '';
+  document.getElementById('ed-etude-docs').innerHTML = (EC.documents||[]).map((d,i) =>
+    `<div style="border:1px solid var(--c-gris-clair);border-radius:6px;padding:0.6rem 0.75rem;margin-bottom:0.5rem">
+      <div style="font-size:0.75rem;font-weight:700;color:var(--c-bleu);margin-bottom:0.4rem">Document ${i+1}</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Titre</label><input type="text" id="etude-doc-titre-${i}" value="${d.titre||''}"></div>
+        <div class="form-group"><label>URL image</label><input type="text" id="etude-doc-img-${i}" value="${d.imageUrl||''}" placeholder="https://..."></div>
+        <div class="form-group" style="grid-column:1/-1"><label>Lien téléchargement</label><input type="text" id="etude-doc-lien-${i}" value="${d.lien||''}" placeholder="https://..."></div>
+      </div>
+    </div>`).join('');
+  document.getElementById('ed-etude-poids').innerHTML = (EC.poids||[]).map((p,i) =>
+    `<div class="form-grid" style="margin-bottom:0.35rem">
+      <div class="form-group"><label>Valeur</label><input type="text" id="etude-poids-val-${i}" value="${p.val||''}"></div>
+      <div class="form-group"><label>Libellé</label><input type="text" id="etude-poids-lbl-${i}" value="${p.lbl||''}"></div>
+    </div>`).join('');
+  document.getElementById('ed-etude-profil').innerHTML = (EC.profil||[]).map((p,i) =>
+    `<div class="form-grid" style="margin-bottom:0.35rem">
+      <div class="form-group"><label>Valeur</label><input type="text" id="etude-profil-val-${i}" value="${p.val||''}"></div>
+      <div class="form-group"><label>Texte</label><input type="text" id="etude-profil-txt-${i}" value="${p.txt||''}"></div>
+    </div>`).join('');
+  document.getElementById('ed-etude-barres').innerHTML = (EC.budgetBarres||[]).map((b,i) =>
+    `<div class="form-grid" style="margin-bottom:0.35rem">
+      <div class="form-group"><label>Libellé barre ${i+1}</label><input type="text" id="etude-barre-lbl-${i}" value="${b.label||''}"></div>
+      <div class="form-group"><label>Valeur</label><input type="text" id="etude-barre-val-${i}" value="${b.val||''}"></div>
+    </div>`).join('');
+  document.getElementById('ed-etude-satis').innerHTML = (EC.satisfaction||[]).map((s,i) =>
+    `<div class="form-grid" style="margin-bottom:0.35rem">
+      <div class="form-group"><label>Territoire</label><input type="text" id="etude-satis-nom-${i}" value="${s.nom||''}"></div>
+      <div class="form-group"><label>Note (ex: 8,8)</label><input type="text" id="etude-satis-note-${i}" value="${s.note||''}"></div>
+      <div class="form-group" style="grid-column:1/-1"><label>Sous-texte</label><input type="text" id="etude-satis-sub-${i}" value="${s.sub||''}"></div>
+    </div>`).join('');
   document.getElementById('ed-c-terra').value = rgbToHex(getComputedStyle(document.documentElement).getPropertyValue('--c-terra').trim());
   document.getElementById('ed-c-vert').value  = rgbToHex(getComputedStyle(document.documentElement).getPropertyValue('--c-vert').trim());
   document.getElementById('ed-c-creme').value = rgbToHex(getComputedStyle(document.documentElement).getPropertyValue('--c-creme').trim());
@@ -2236,6 +2575,41 @@ function applyEdits() {
   // Couleurs
   const r = document.documentElement;
   r.style.setProperty('--c-bleu',  document.getElementById('ed-c-bleu').value);
+
+  // Étude clientèle
+  const EC = CONFIG.etudeClientele;
+  EC.annee = parseInt(document.getElementById('ed-etude-annee').value) || EC.annee;
+  EC.budgetTotal = {
+    val: document.getElementById('ed-etude-budget-total-val').value,
+    lbl: document.getElementById('ed-etude-budget-total-lbl').value,
+  };
+  EC.budgetDelta = document.getElementById('ed-etude-budget-delta').value;
+  EC.documents = EC.documents.map((d,i) => ({
+    ...d,
+    titre:    document.getElementById(`etude-doc-titre-${i}`)?.value || d.titre,
+    imageUrl: document.getElementById(`etude-doc-img-${i}`)?.value ?? d.imageUrl,
+    lien:     document.getElementById(`etude-doc-lien-${i}`)?.value || d.lien,
+  }));
+  EC.poids = EC.poids.map((p,i) => ({
+    val: document.getElementById(`etude-poids-val-${i}`)?.value || p.val,
+    lbl: document.getElementById(`etude-poids-lbl-${i}`)?.value || p.lbl,
+  }));
+  EC.profil = EC.profil.map((p,i) => ({
+    val: document.getElementById(`etude-profil-val-${i}`)?.value || p.val,
+    txt: document.getElementById(`etude-profil-txt-${i}`)?.value || p.txt,
+  }));
+  EC.budgetBarres = EC.budgetBarres.map((b,i) => ({
+    ...b,
+    label: document.getElementById(`etude-barre-lbl-${i}`)?.value || b.label,
+    val:   document.getElementById(`etude-barre-val-${i}`)?.value || b.val,
+  }));
+  EC.satisfaction = EC.satisfaction.map((s,i) => ({
+    ...s,
+    nom:  document.getElementById(`etude-satis-nom-${i}`)?.value || s.nom,
+    note: document.getElementById(`etude-satis-note-${i}`)?.value || s.note,
+    sub:  document.getElementById(`etude-satis-sub-${i}`)?.value || s.sub,
+    featured: s.featured, // préserver
+  }));
   r.style.setProperty('--c-terra', document.getElementById('ed-c-terra').value);
   r.style.setProperty('--c-vert',  document.getElementById('ed-c-vert').value);
   r.style.setProperty('--c-creme', document.getElementById('ed-c-creme').value);
