@@ -89,7 +89,10 @@
     display: flex;
     padding: 0 2rem;
     gap: 0.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
   }
+  .nav-tabs::-webkit-scrollbar { display: none; }
   .tab-btn {
     background: none; border: none;
     color: rgba(255,255,255,0.6);
@@ -101,6 +104,8 @@
     transition: all 0.2s;
     letter-spacing: 0.03em;
     text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
   .tab-btn:hover { color: rgba(255,255,255,0.9); }
   .tab-btn.active {
@@ -2811,6 +2816,7 @@ function renderMarchesDept() {
 // GÉNÉRATION PDF
 // ═══════════════════════════════════════════════
 function downloadPDF() {
+  try {
   const D = DATA;
   const AN = D.annee;
   const AN1 = AN - 1;
@@ -3195,7 +3201,7 @@ function downloadPDF() {
   <text x="${PW/2}" y="25" text-anchor="middle" font-family="Georgia,serif" font-size="14" fill="white" font-weight="700">Marchés FR par région — Données non disponibles pour ${AN}</text>
   `;
 
-  // ── Assembler : 4 SVG séparés, chacun exactement A4 paysage (842×595) ──
+  // ── Assembler toutes les pages ──
   const makePage = (pageContent) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="${PW}" height="${PH}" viewBox="0 0 ${PW} ${PH}">
       <defs><style>text { font-family: Arial, sans-serif; }</style></defs>
@@ -3203,11 +3209,158 @@ function downloadPDF() {
       ${pageContent}
     </svg>`;
 
+  // ════════════════════ PAGE 5 — ACCUEIL ════════════════════
+  const page5 = `
+  <rect x="0" y="0" width="${PW}" height="${PH}" fill="white"/>
+  <rect x="0" y="0" width="${PW}" height="5" fill="${C.terra}"/>
+
+  <text x="${PW/2}" y="130" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="${C.gris}" letter-spacing="4">OBSERVATOIRE TOURISTIQUE</text>
+  <line x1="${PW/2-60}" y1="145" x2="${PW/2+60}" y2="145" stroke="${C.terra}" stroke-width="1.5"/>
+  <text x="${PW/2}" y="200" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="${C.bleu}" font-weight="700">Contrées Vertes</text>
+  <text x="${PW/2}" y="240" text-anchor="middle" font-family="Georgia,serif" font-size="16" fill="${C.terra}" font-style="italic">Ici, rien d'exceptionnel. Vous allez adorer.</text>
+  <line x1="${PW/2-120}" y1="262" x2="${PW/2+120}" y2="262" stroke="${C.grisCl}" stroke-width="1"/>
+  <text x="${PW/2}" y="296" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="${C.gris}" font-style="italic">Besoin d'une vue d'ensemble rapide et efficace sur</text>
+  <text x="${PW/2}" y="314" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="${C.gris}" font-style="italic">l'activité touristique des Contrées Vertes ?</text>
+
+  <rect x="${PW/2-50}" y="${PH-50}" width="100" height="28" fill="${C.terra}" rx="5"/>
+  <text x="${PW/2}" y="${PH-31}" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="white" font-weight="700">${AN}</text>`;
+
+  // ════════════════════ PAGE 6 — DÉPARTEMENTS ÉMETTEURS ════════════════════
+  const deptData = D.deptEmetteurs || [];
+  const deptMax = deptData.length ? Math.max(...deptData.map(d => d.part)) : 1;
+  const page6 = `
+  <rect x="0" y="0" width="${PW}" height="42" fill="${C.bleu}"/>
+  <text x="${M}" y="20" font-family="Georgia,serif" font-size="14" fill="white" font-weight="700">OBSERVATOIRE TOURISTIQUE — ${esc(D.territoire.toUpperCase())}</text>
+  <text x="${M}" y="34" font-family="Arial" font-size="8" fill="rgba(255,255,255,0.7)" letter-spacing="1">MARCHÉS FRANÇAIS PAR DÉPARTEMENT ÉMETTEUR · ${AN}</text>
+  <rect x="${PW-90}" y="8" width="62" height="26" fill="${C.terra}" rx="4"/>
+  <text x="${PW-59}" y="25" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="white" font-weight="700">${AN}</text>
+
+  ${sectionTitle(M, 52, 'NUITÉES PAR DÉPARTEMENT ÉMETTEUR — PART & ÉVOLUTION', C.terra)}
+
+  <!-- KPI marchés FR -->
+  ${(D.marchFrKpi||[]).slice(0,4).map((k,i) => kpiBox(M + i*190, 70, 175, 62, k.val, k.label, k.evo||'', C.bleuCl, '#2C2C2C', C.bleu)).join('')}
+
+  <!-- En-tête tableau -->
+  <rect x="${M}" y="144" width="380" height="18" fill="${C.bleu}" rx="3"/>
+  <text x="${M+4}" y="157" font-family="Arial" font-size="8" fill="white" font-weight="700">DÉPARTEMENT ÉMETTEUR</text>
+  <text x="${M+200}" y="157" font-family="Arial" font-size="8" fill="white" font-weight="700">PART NUITÉES</text>
+  <text x="${M+310}" y="157" font-family="Arial" font-size="8" fill="white" font-weight="700">ÉVOLUTION AN-1</text>
+
+  ${deptData.slice(0,12).map((d, i) => {
+    const bg = i % 2 === 0 ? 'white' : C.creme;
+    const bw = Math.round((d.part / deptMax) * 90);
+    const evo = d.evo >= 0 ? '+'+d.evo+'%' : d.evo+'%';
+    const evoColor = d.evo >= 0 ? C.vert : C.terra;
+    return `<rect x="${M}" y="${144+18+i*17}" width="760" height="17" fill="${bg}"/>
+    <text x="${M+4}" y="${144+18+i*17+12}" font-family="Arial" font-size="8.5" fill="#2C2C2C">${esc(d.dept||'')}</text>
+    <rect x="${M+240}" y="${144+18+i*17+4}" width="${bw}" height="9" fill="${C.terra}" rx="2" opacity="0.8"/>
+    <text x="${M+240+bw+4}" y="${144+18+i*17+12}" font-family="Arial" font-size="8" fill="${C.terra}" font-weight="700">${d.part}%</text>
+    <text x="${M+420}" y="${144+18+i*17+12}" font-family="Arial" font-size="8" fill="${evoColor}" font-weight="600">${evo} ▾</text>`;
+  }).join('')}
+  <!-- Ligne total -->
+  <rect x="${M}" y="${144+18+12*17}" width="760" height="18" fill="${C.bleuCl}"/>
+  <text x="${M+4}" y="${144+18+12*17+13}" font-family="Arial" font-size="9" fill="${C.bleu}" font-weight="700">Total</text>
+  <text x="${M+240}" y="${144+18+12*17+13}" font-family="Arial" font-size="9" fill="${C.bleu}" font-weight="700">100%</text>
+  <text x="${M+420}" y="${144+18+12*17+13}" font-family="Arial" font-size="8" fill="${C.terra}" font-weight="700">${D.marchFrKpi?.[1]?.val||''} ${D.marchFrKpi?.[1]?.evo||''}</text>
+
+  <text x="${M}" y="${PH-8}" font-family="Arial" font-size="7" fill="${C.gris}">Contrées Vertes · Bilan ${AN} · Source FluxVision / VisitData</text>`;
+
+  // ════════════════════ PAGE 7 — ÉTUDE CLIENTÈLE ════════════════════
+  const EC = CONFIG.etudeClientele;
+  const page7 = `
+  <rect x="0" y="0" width="${PW}" height="42" fill="${C.bleu}"/>
+  <text x="${M}" y="20" font-family="Georgia,serif" font-size="14" fill="white" font-weight="700">OBSERVATOIRE TOURISTIQUE — ${esc(D.territoire.toUpperCase())}</text>
+  <text x="${M}" y="34" font-family="Arial" font-size="8" fill="rgba(255,255,255,0.7)" letter-spacing="1">ÉTUDE CLIENTÈLE · ${EC.annee} — SOURCE IPSOS BVA / NOUVELLE-AQUITAINE</text>
+  <rect x="${PW-90}" y="8" width="62" height="26" fill="${C.terra}" rx="4"/>
+  <text x="${PW-59}" y="25" text-anchor="middle" font-family="Georgia,serif" font-size="13" fill="white" font-weight="700">${EC.annee}</text>
+
+  <!-- Poids Contrées Vertes -->
+  ${sectionTitle(M, 52, 'POIDS DES CONTRÉES VERTES DANS LE DÉPARTEMENT', C.terra)}
+  ${(EC.poids||[]).map((p,i) => `
+    <rect x="${M+i*200}" y="70" width="185" height="55" fill="${C.creme}" rx="6"/>
+    <rect x="${M+i*200}" y="70" width="4" height="55" fill="${C.terra}" rx="2"/>
+    <text x="${M+i*200+16}" y="100" font-family="Georgia,serif" font-size="22" fill="${C.terra}" font-weight="700">${esc(p.val)}</text>
+    <text x="${M+i*200+16}" y="116" font-family="Arial" font-size="8" fill="${C.gris}">${esc(p.lbl)}</text>`).join('')}
+
+  <!-- Profil clientèle -->
+  ${sectionTitle(M, 140, 'PROFIL DE LA CLIENTÈLE', C.bleu)}
+  ${(EC.profil||[]).map((p,i) => `
+    <text x="${M}" y="${162+i*22}" font-family="Georgia,serif" font-size="14" fill="${C.bleu}" font-weight="700">${esc(p.val)}</text>
+    <text x="${M+75}" y="${162+i*22}" font-family="Arial" font-size="9" fill="#2C2C2C">${esc(p.txt)}</text>`).join('')}
+
+  <!-- Budget & dépenses -->
+  ${sectionTitle(M+380, 140, 'BUDGET & DÉPENSES', C.vert)}
+  <rect x="${M+380}" y="158" width="380" height="36" fill="${C.creme}" rx="6"/>
+  <text x="${M+394}" y="181" font-family="Georgia,serif" font-size="18" fill="${C.vert}" font-weight="700">${esc(EC.budgetTotal?.val||'')}</text>
+  <text x="${M+450}" y="181" font-family="Arial" font-size="8" fill="${C.gris}">${esc(EC.budgetTotal?.lbl||'')}</text>
+  ${(EC.budgetBarres||[]).map((b,i) => {
+    const bw = Math.round((b.largeurPct/100)*280);
+    return `<text x="${M+380}" y="${208+i*28}" font-family="Arial" font-size="8.5" fill="#2C2C2C" font-weight="600">${esc(b.label)}</text>
+    <text x="${M+650}" y="${208+i*28}" font-family="Arial" font-size="9" fill="${C.bleu}" font-weight="700" text-anchor="end">${esc(b.val)}</text>
+    <rect x="${M+380}" y="${210+i*28}" width="${bw}" height="10" fill="${b.couleur||C.bleu}" rx="3" opacity="0.85"/>`;
+  }).join('')}
+  <rect x="${M+380}" y="${208+(EC.budgetBarres||[]).length*28+6}" width="140" height="18" fill="${C.vertCl}" rx="4"/>
+  <text x="${M+390}" y="${220+(EC.budgetBarres||[]).length*28+6}" font-family="Arial" font-size="8" fill="${C.vert}" font-weight="700">${esc(EC.budgetDelta||'')}</text>
+
+  <!-- Retombées économiques -->
+  ${sectionTitle(M, 230, 'RETOMBÉES ÉCONOMIQUES', C.terra)}
+  <rect x="${M}" y="248" width="340" height="60" fill="${C.creme}" rx="6"/>
+  <text x="${M+16}" y="272" font-family="Arial" font-size="11">🌙</text>
+  <text x="${M+36}" y="272" font-family="Georgia,serif" font-size="12" fill="${C.bleu}" font-weight="700">${esc(EC.retombeesNuitees||'')}</text>
+  <text x="${M+36}" y="285" font-family="Arial" font-size="7" fill="${C.gris}">nuitées</text>
+  <text x="${M+130}" y="274" font-family="Arial" font-size="14" fill="${C.gris}" font-weight="700">×</text>
+  <text x="${M+148}" y="272" font-family="Arial" font-size="11">💶</text>
+  <text x="${M+168}" y="272" font-family="Georgia,serif" font-size="12" fill="${C.bleu}" font-weight="700">${esc(EC.retombeesDepense||'')}</text>
+  <text x="${M+168}" y="285" font-family="Arial" font-size="7" fill="${C.gris}">dépense/jour</text>
+  <text x="${M+235}" y="274" font-family="Arial" font-size="14" fill="${C.gris}" font-weight="700">=</text>
+  <text x="${M+255}" y="277" font-family="Georgia,serif" font-size="20" fill="${C.terra}" font-weight="700">${esc(EC.retombees||'')}</text>
+
+  <!-- Satisfaction -->
+  ${sectionTitle(M, 330, 'SATISFACTION CLIENT', C.bleu)}
+  ${(EC.satisfaction||[]).map((s,i) => `
+    <rect x="${M+i*200}" y="348" width="185" height="90" fill="${s.featured ? C.vertCl : C.grisCl}" rx="8"/>
+    ${s.featured ? `<rect x="${M+i*200}" y="348" width="185" height="3" fill="${C.vert}" rx="1"/>` : ''}
+    <text x="${M+i*200+92}" y="368" text-anchor="middle" font-family="Arial" font-size="8" fill="${C.gris}" font-weight="700" letter-spacing="1">${esc(s.nom.toUpperCase())}</text>
+    <text x="${M+i*200+92}" y="405" text-anchor="middle" font-family="Georgia,serif" font-size="28" fill="${s.featured ? C.vert : C.bleu}" font-weight="700">${esc(s.note)}</text>
+    <text x="${M+i*200+92}" y="420" text-anchor="middle" font-family="Arial" font-size="10" fill="#F5A623">★★★★★</text>
+    <text x="${M+i*200+92}" y="432" text-anchor="middle" font-family="Arial" font-size="7" fill="${s.featured ? C.vert : C.gris}" font-weight="${s.featured?'700':'400'}">${esc(s.sub)}</text>`).join('')}
+
+  <text x="${M}" y="${PH-8}" font-family="Arial" font-size="7" fill="${C.gris}">Contrées Vertes · Étude clientèle ${EC.annee} · Source Ipsos BVA / Nouvelle-Aquitaine</text>`;
+
+  // ════════════════════ PAGE 8 — CONTACT ════════════════════
+  const page8 = `
+  <rect x="0" y="0" width="${PW}" height="${PH}" fill="white"/>
+  <rect x="0" y="${PH-5}" width="${PW}" height="5" fill="${C.terra}"/>
+
+  <text x="${PW/2}" y="110" text-anchor="middle" font-family="Arial,sans-serif" font-size="11" fill="${C.gris}" letter-spacing="4">OBSERVATOIRE TOURISTIQUE DES CONTRÉES VERTES</text>
+  <line x1="${PW/2-120}" y1="125" x2="${PW/2+120}" y2="125" stroke="${C.terra}" stroke-width="1.5"/>
+  <text x="${PW/2}" y="175" text-anchor="middle" font-family="Georgia,serif" font-size="24" fill="${C.bleu}" font-weight="700">Curieux, envie d'en savoir plus ?</text>
+  <text x="${PW/2}" y="207" text-anchor="middle" font-family="Georgia,serif" font-size="17" fill="${C.terra}" font-style="italic">On aime ça par ici</text>
+  <line x1="${PW/2-120}" y1="226" x2="${PW/2+120}" y2="226" stroke="${C.grisCl}" stroke-width="1"/>
+  <text x="${PW/2}" y="258" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="${C.gris}">Pour accéder à des données détaillées, analyses ou études personnalisées :</text>
+
+  <rect x="${PW/2-200}" y="275" width="400" height="100" fill="${C.creme}" rx="10"/>
+  <rect x="${PW/2-200}" y="275" width="400" height="4" fill="${C.terra}" rx="2"/>
+  <text x="${PW/2}" y="304" text-anchor="middle" font-family="Georgia,serif" font-size="15" fill="${C.bleu}" font-weight="700">Basile Leymond</text>
+  <text x="${PW/2}" y="326" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#2C2C2C">✉  basile.leymond@contreesvertes.com</text>
+  <text x="${PW/2}" y="348" text-anchor="middle" font-family="Arial,sans-serif" font-size="10" fill="#2C2C2C">📞  07 85 90 18 48</text>
+
+  <a href="https://contreesvertes.com" target="_blank">
+    <text x="${PW/2}" y="405" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" fill="${C.terra}" font-weight="700" text-decoration="underline">🌐  contreesvertes.com</text>
+  </a>
+
+  <text x="${PW/2}" y="${PH-15}" text-anchor="middle" font-family="Arial,sans-serif" font-size="8" fill="${C.grisCl}">Contrées Vertes · Bilan ${AN} · Source FluxVision / VisitData</text>`;
+
+  // ── Assembler toutes les pages ──
   const svgContent = [
+    makePage(page5),
     makePage(page1),
     makePage(page2),
     makePage(page3),
-    ...(page4 ? [makePage(page4)] : [])
+    makePage(page6),
+    makePage(page4),
+    makePage(page7),
+    makePage(page8),
   ].join('\n<!-- PAGE_BREAK -->\n');
 
   // ── Télécharger SVG (s'ouvre dans navigateur / imprimable en PDF) ──
@@ -3252,6 +3405,10 @@ function downloadPDF() {
       </body></html>`);
     win.document.close();
   }, 400);
+  } catch(e) {
+    alert('Erreur PDF : ' + e.message);
+    console.error(e);
+  }
 }
 
 // Fermer modal en cliquant outside
